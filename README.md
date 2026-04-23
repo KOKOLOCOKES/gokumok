@@ -1,31 +1,28 @@
-# 🎮 Action Influence Map 기반 강화학습 오목 AI
-
-> **Dongguk University** — 임동건 · 김건우 · 성윤식  
-> *Action Influence Map-based Reinforcement Learning for Gomoku*
+# Action Influence Map 기반 강화학습 오목 AI
 
 ---
 
-## 📌 프로젝트 개요
+## 프로젝트 개요
 
 기존 강화학습은 상태공간(State Space)이 커질수록 계산량이 기하급수적으로 증가하는 문제가 있다. 본 연구는 두 단계의 연구를 거쳐 **Action Influence Map** 기반 강화학습을 완성하였으며, 오목(Gomoku) 게임 환경에서 몬테카를로 강화학습에 적용해 성능과 학습 효율을 동시에 향상시키는 방법을 제안한다.
 
 ---
 
-## 🗺️ 연구 흐름
+## 연구 흐름
 
 ```
 [Traditional Influence Map]
         │  한계 인식 (계산량 증가, 영향력 상쇄 문제)
         ▼
-[구 논문] 흑·백 돌 간 영향력 계산 기반 몬테카를로 오목 AI
+[컨셉 1] 흑·백 돌 간 영향력 계산 기반 몬테카를로 오목 AI
         │  영향력 계산 방식 정형화 및 고도화
         ▼
-[현 논문] Action Influence Map 기반 강화학습
+[컨셉 2] Action Influence Map 기반 강화학습
 ```
 
 ---
 
-## 1️⃣ Traditional Influence Map
+## Traditional Influence Map
 
 Traditional Influence Map은 지형에 존재하는 사물이나 에이전트들이 미치는 요소를 격자(grid) 위에 표현하여, 각 위치의 전략적·전술적 중요도를 결정하는 방법이다.
 
@@ -45,7 +42,7 @@ Traditional Influence Map은 지형에 존재하는 사물이나 에이전트들
 
 ---
 
-## 2️⃣ 구 논문 — 흑·백 돌 간 영향력 계산 기반 몬테카를로 오목 AI
+## 컨셉 1 — 흑·백 돌 간 영향력 계산 기반 몬테카를로 오목 AI
 
 > *몬테카를로 방식의 높은 승률 + 오목의 넓은 상태공간 문제를 함께 해결하기 위한 초기 연구*
 
@@ -88,13 +85,12 @@ Traditional Influence Map은 지형에 존재하는 사물이나 에이전트들
 
 ---
 
-## 3️⃣ 현 논문 — Action Influence Map 기반 강화학습
+## 컨셉 2 — Action Influence Map 기반 강화학습
 
-> *구 논문의 영향력 개념을 정형화하여 Window 기반의 Action Influence Map으로 발전*  
-> *Lim D., Kim G., Sung Y. — Dongguk University, 2021*
+> *컨셉 1의 영향력 개념을 정형화하여 Window 기반의 Action Influence Map으로 발전*  
 
 ### 핵심 아이디어
-구 논문의 방식을 **Window 기반**으로 재정의하여 계산 방식을 일반화하였다. 영향력 값이 높은 상위 **10개의 행동만** 선택하여 강화학습의 계산량을 줄이고 성능을 향상시킨다.
+컨셉 1의 방식을 **Window 기반**으로 재정의하여 계산 방식을 일반화하였다. 영향력 값이 높은 상위 **10개의 행동만** 선택하여 강화학습의 계산량을 줄이고 성능을 향상시킨다.
 
 ### 환경 설정
 - 보드 크기: **9×9**
@@ -123,7 +119,7 @@ Traditional Influence Map은 지형에 존재하는 사물이나 에이전트들
 
 ### Traditional Influence Map과의 차이
 
-| 항목 | Traditional | Action Influence Map (구 논문) | Action Influence Map (현 논문) |
+| 항목 | Traditional | Action Influence Map (컨셉 1) | Action Influence Map (컨셉 2) |
 |---|:---:|:---:|:---:|
 | 영향력 계산 기준 | 거리 기반 전파 | 인접 돌 쌍 + 진행 방향 | Window(연속 5칸) 기반 |
 | 영향력 상쇄 | 발생함 | 부호 고정으로 방지 | 부호 분리로 방지 |
@@ -132,7 +128,7 @@ Traditional Influence Map은 지형에 존재하는 사물이나 에이전트들
 
 ---
 
-## 🔬 실험 결과
+## 실험 결과
 
 실험 환경: 9×9 오목, 선공·후공 각 **100 에피소드**
 
@@ -140,30 +136,30 @@ Traditional Influence Map은 지형에 존재하는 사물이나 에이전트들
 
 | 방법 | 평균 행동 후보 수 |
 |---|:---:|
-| **현 논문 (Action Influence Map)** | **10개 고정** |
+| **컨셉2 (Action Influence Map)** | **10개 고정** |
 | Traditional RL (주변 8칸 제한) | 가변 |
 
 ### 계산 속도 비교
 
 | 방법 | 선공 평균 | 후공 평균 | 전체 평균 |
 |---|:---:|:---:|:---:|
-| **현 논문** | 35.90s | 34.45s | **35.18s** |
+| **컨셉 2** | 35.90s | 34.45s | **35.18s** |
 | Traditional RL | 19.87s | 18.38s | 19.18s |
 
 > ⚠️ 행동 후보 수는 줄었지만, 매 착수마다 Influence Map을 새로 생성하는 비용으로 인해 학습 시간은 기존 대비 약 **183%** 더 소요됨
 
 ### 승률 비교
 
-| 시나리오 | 현 논문 승률 | Traditional RL 승률 | 차이 |
+| 시나리오 | 컨셉 2 승률 | Traditional RL 승률 | 차이 |
 |---|:---:|:---:|:---:|
-| 현 논문 **선공** | **79%** | 21% | **+58%** |
-| 현 논문 **후공** | **53%** | 47% | **+6%** |
+| 컨셉 2 **선공** | **79%** | 21% | **+58%** |
+| 컨셉 2 **후공** | **53%** | 47% | **+6%** |
 
 ---
 
 ## 💡 결론
 
-- 구 논문의 영향력 개념을 Window 기반으로 정형화하여 **계산 방식의 일반화** 달성
+- 컨셉 1의 영향력 개념을 Window 기반으로 정형화하여 **계산 방식의 일반화** 달성
 - 행동 후보를 **10개로 고정**함으로써 탐색 공간을 획기적으로 축소
 - Traditional RL은 행동 공간이 커서 강제 제한이 필요한 반면, 제안 방법은 **최적 행동 선택을 자연스럽게 보장**
 - 선공 기준 **79% 승률**로 기존 대비 58% 높은 성능 달성
@@ -185,31 +181,3 @@ Traditional Influence Map은 지형에 존재하는 사물이나 에이전트들
 - **핵심 라이브러리**: NumPy
 - **알고리즘**: Monte Carlo Method (ε-greedy 정책)
 - **환경**: 9×9 오목 (커스텀 구현)
-
----
-
-## 📂 프로젝트 구조
-
-```
-├── env/
-│   └── gomoku.py            # 오목 환경 구현
-├── influence_map/
-│   ├── action_influence.py  # Action Influence Map 계산
-│   └── window_search.py     # Window 탐색 및 영향력 전파
-├── agent/
-│   └── monte_carlo.py       # Monte Carlo 강화학습 에이전트
-├── train.py                 # 학습 실행 스크립트
-└── evaluate.py              # 승률 평가 스크립트
-```
-
-> 위 구조는 논문 내용을 기반으로 작성된 예시입니다. 실제 파일명에 맞게 수정해 주세요.
-
----
-
-## 📄 References
-
-1. Sung Y, Cho K. Q-learning Using Influence Map. *멀티미디어학회논문지*, 9(5), 649-657. 2006.
-2. Noble, A. D. J., & Lee, C. G. Reinforced Learning in Board Games. *한국정보과학회*, 2018.
-3. Shin Y. An improvement of the learning speed through Influence Map on Reinforcement Learning. *한국게임학회 논문지* 17.4, 109-116. 2017.
-4. Metropolis, N., & Ulam, S. The Monte Carlo Method. *Journal of the American Statistical Association*, 44(247), 335–341. 1949.
-5. BELLMAN, R. A Markovian Decision Process. *Journal of Mathematics and Mechanics*, 6(5), 679–684. 1957.
